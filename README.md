@@ -1,142 +1,187 @@
-# React Decision Tree
+# react-decision-tree-flow
 
-## Quick start
+This is a library to create declarative wizards in React.js
 
-`yarn add react-decision-tree-flow`
+# Development
 
-[Demo](https://rjerue.github.io/react-decision-tree-flow)
+Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
 
-code
+> This TSDX setup is meant for developing React components (not apps!) that can be published to NPM. If you’re looking to build an app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
 
-```
-import { Wizard, Step, Controls } from "react-decision-tree-flow";
+> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
 
-const tree = {
-  step1: ["step2"],
-  step2: ["step3", "error"],
-  step3: ["step1"],
-  error: ["step2"]
-};
+## Commands
 
-const App = () => (
-  <Wizard tree={tree} first="step1">
-    <Step name="step1">
-      <div>
-        I am step 1
-        <br />
-        <Controls>
-          {({ step2 }) => <div onClick={step2}>Go to Step 2</div>}
-        </Controls>
-      </div>
-    </Step>
-    <Step name="step2">
-      <div>
-        I am step 2
-        <br />
-        <Controls>
-          {({ step3, error }) => (
-            <div>
-              <div onClick={error}>Go to error</div>
-              <div onClick={step3}>Go to Step 3</div>
-            </div>
-          )}
-        </Controls>
-      </div>
-    </Step>
-    <Step name="step3">
-      <div>
-        I am step 3
-        <br />
-        <Controls>
-          {({ step1 }) => <div onClick={step1}>Go to Step 1</div>}
-        </Controls>
-      </div>
-    </Step>
-    <Step name="error">
-      <div>
-        I am step 4
-        <br />
-        <Controls>
-          {({ step2 }) => <div onClick={step2}>Go to Step 2</div>}
-        </Controls>
-      </div>
-    </Step>
-  </Wizard>
-);
+TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
+
+The recommended workflow is to run TSDX in one terminal:
 
 ```
-
-## Why?
-
-Often times when looking for libraries to handle decision trees or wizards, I found plenty of libraries that were sequential; things that went in a nice step by step sequence.
-
-Sadly, this isn't how things often work; total web of lies! Instead, things look more like a web such as this:
-
-![Process Diagram](https://i.imgur.com/43ZaQL5.png)
-
-That's not a line, that's a tree. As such, I've created a declarative decision tree.
-
-## How?
-
-There's three components to `react-decision-tree-flow` The **Wizard**, a **Step**, and **Controls**. Controls may also be exposed as a `useControls` hook.
-
-## Wizard
-
-The Wizard needs to wrap everything because this is where the context lives. It needs two props: the **tree** and the **first** step. The wizard has an optional third prop called `middleware` for middleware that runs after each step. You pay pass in a function or an array of functions. There is a `noFirst` prop to skip running middleware on the first step. The `middleware` function takes in the params `step, setStep, tree`. `Step` is the current step, `setStep` is a function to change the step (pass in new step), and `tree` is the tree passed into the wizard.
-
-#### Tree
-
-The tree is an object, it's keys are the steps in the wizard. Each key's value is an array to the other steps in the Wizard. Alternatively, you may input an object into the key and it will alias the value in that object. Here's an example Tree:
-
-```
-const tree = {
-  step1: ["step2", "sideshow"],
-  sideshow: ["step3", { previous: "step2" }],
-  step2: ["step3", "error"],
-  step3: ["step1"],
-  error: ["step2"]
-};
+npm start # or yarn start
 ```
 
-- Step 1 goes to step 2 or sideshow
-- Sideshow goes to step3 by a call to `step3()`. It can return to step2 with a call to `previous()`. More on this later.
-- Step 2 brings you to step 3, or the error step
-- Step 3 brings you to step 1
-- Error brings you to step 2
+This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
 
-#### First
+Then run either example playground or storybook:
 
-This one is pretty easy, it's just what the first step of the tree is. In the above example you'd just have the prop passed down as `first="step1"` to start at step1
+### Storybook
 
-## Step
-
-Steps are what make up elements in the Wizard. They have one prop: a **name**.
-
-#### Name
-
-This is just the name of the step. It needs to line up with some value in the `tree`'s keys.
-
-#### Rendering Steps
-
-This will be the step that is currently active
-
-## Controls
-
-The controls are the fun part, they're how the steps get changed. The Controls just have a render prop in the children that exposes whatever you inputted into the tree. Step 1 for example would expose `step2()` and `sideshow()` that you could then call whenever you wanted. Keys may be aliased as objects too as demonstrated in the above example. The `tree` and current `step` are also exposed.
-
-## Hooks
-
-The `useControls` hook is useful to get the controls anywhere while in a Wizard's context. It may be used as a subsititue to `Controls` and exposes the same things.
-
-## Wow! How dare you make this opinionated
-
-I even expose the `WizardContext` so you can progromatically break it and ignore my opions. It contains the following:
+Run inside another terminal:
 
 ```
-{
-  tree: {}, // the tree object
-  step: null, // the step that the wizard is on
+yarn storybook
+```
+
+This loads the stories from `./stories`.
+
+> NOTE: Stories should reference the components as if using the library, similar to the example playground. This means importing from the root project directory. This has been aliased in the tsconfig and the storybook webpack config as a helper.
+
+### Example
+
+Then run the example inside another:
+
+```
+cd example
+npm i # or yarn to install dependencies
+npm start # or yarn start
+```
+
+The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, [we use Parcel's aliasing](https://github.com/palmerhq/tsdx/pull/88/files).
+
+To do a one-off build, use `npm run build` or `yarn build`.
+
+To run tests, use `npm test` or `yarn test`.
+
+## Configuration
+
+Code quality is [set up for you](https://github.com/palmerhq/tsdx/pull/45/files) with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+
+### Jest
+
+Jest tests are set up to run with `npm test` or `yarn test`. This runs the test watcher (Jest) in an interactive mode. By default, runs tests related to files changed since the last commit.
+
+#### Setup Files
+
+This is the folder structure we set up for you:
+
+```
+/example
+  index.html
+  index.tsx       # test your component here in a demo app
+  package.json
+  tsconfig.json
+/src
+  index.tsx       # EDIT THIS
+/test
+  blah.test.tsx   # EDIT THIS
+.gitignore
+package.json
+README.md         # EDIT THIS
+tsconfig.json
+```
+
+#### React Testing Library
+
+We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
+
+### Rollup
+
+TSDX uses [Rollup v1.x](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
+
+### TypeScript
+
+`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
+
+## Continuous Integration
+
+### Travis
+
+_to be completed_
+
+### Circle
+
+_to be completed_
+
+## Optimizations
+
+Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
+
+```js
+// ./types/index.d.ts
+declare var __DEV__: boolean;
+
+// inside your code...
+if (__DEV__) {
+  console.log('foo');
 }
 ```
 
-There's also a `useWizardContext` hook that exposes everything in the Wizard's context object.
+You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+
+## Module Formats
+
+CJS, ESModules, and UMD module formats are supported.
+
+The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+
+## Using the Playground
+
+```
+cd example
+npm i # or yarn to install dependencies
+npm start # or yarn start
+```
+
+The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**!
+
+## Deploying the Playground
+
+The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
+
+```bash
+cd example # if not already in the example folder
+npm run build # builds to dist
+netlify deploy # deploy the dist folder
+```
+
+Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+
+```bash
+netlify init
+# build command: yarn build && cd example && yarn && yarn build
+# directory to deploy: example/dist
+# pick yes for netlify.toml
+```
+
+## Named Exports
+
+Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+
+## Including Styles
+
+There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
+
+For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
+
+## Publishing to NPM
+
+We recommend using https://github.com/sindresorhus/np.
+
+## Usage with Lerna
+
+When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
+
+The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
+
+Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
+
+```diff
+   "alias": {
+-    "react": "../node_modules/react",
+-    "react-dom": "../node_modules/react-dom"
++    "react": "../../../node_modules/react",
++    "react-dom": "../../../node_modules/react-dom"
+   },
+```
+
+An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
