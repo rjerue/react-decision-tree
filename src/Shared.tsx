@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface Tree {
-  readonly [step: string]: readonly (string | Record<string, string>)[];
+  readonly [step: string]: readonly string[];
 }
 
 export type ControlType<T extends Tree> = Record<keyof T, () => void>;

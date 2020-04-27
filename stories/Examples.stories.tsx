@@ -11,7 +11,7 @@ export const BasicTree = () => {
     step2: ['step3', 'error'],
     step3: ['step1'],
     error: ['step2'],
-  };
+  } as const;
 
   return (
     <Wizard tree={tree} first="step1">
@@ -107,20 +107,14 @@ export const ComplexTree = () => {
 export const HooksTree = () => {
   const inTree = {
     step1: ['step2', 'sideshow'],
-    sideshow: [
-      'step2',
-      { previous: 'step2', next: 'step3' },
-      { rawr: 'error' },
-      'step3',
-    ],
+    sideshow: ['step2', 'step3'],
     step2: ['step3', 'error'],
     step3: ['step1'],
     error: ['step2'],
   };
 
-  type z = typeof inTree;
   const StepComp = ({ value }) => {
-    const { step, tree, destinations } = useControls();
+    const { step, tree, destinations } = useControls<typeof inTree>();
     return (
       <Step name={value}>
         <div>

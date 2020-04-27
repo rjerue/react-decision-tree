@@ -16,21 +16,11 @@ export function Wizard<T extends Tree>({
   const getControls = () => {
     const possibleSteps = tree[step];
     return possibleSteps.reduce<ControlType<T>>((accum, step) => {
-      const next =
-        typeof step !== 'string'
-          ? Object.entries(step).reduce((stepAccum, [alias, realStep]) => {
-              return {
-                ...stepAccum,
-                [alias]: () => {
-                  setStep(realStep);
-                },
-              };
-            }, {})
-          : {
-              [step]: () => {
-                setStep(step);
-              },
-            };
+      const next = {
+        [step]: () => {
+          setStep(step);
+        },
+      };
       return {
         ...accum,
         ...next,
