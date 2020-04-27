@@ -2,6 +2,71 @@
 
 This is a library to create declarative wizards in React.js
 
+A basic example of a Wizard looks like this:
+
+```tsx
+export const BasicTree = () => {
+  const tree = {
+    step1: ['step2'],
+    step2: ['step3', 'error'],
+    step3: ['step1'],
+    error: ['step2'],
+  } as const;
+
+  return (
+    <Wizard tree={tree} first="step1">
+      <Step name="step1">
+        <div>
+          I am step 1
+          <br />
+          <Controls>
+            {({ destinations: { step2 } }) => (
+              <button onClick={step2}>Go to Step 2</button>
+            )}
+          </Controls>
+        </div>
+      </Step>
+      <Step name="step2">
+        <div>
+          I am step 2
+          <br />
+          <Controls>
+            {({ destinations: { step3, error } }) => (
+              <div>
+                <button onClick={error}>Go to error</button>
+                <button onClick={step3}>Go to Step 3</button>
+              </div>
+            )}
+          </Controls>
+        </div>
+      </Step>
+      <Step name="step3">
+        <div>
+          I am step 3
+          <br />
+          <Controls>
+            {({ destinations: { step1 } }) => (
+              <button onClick={step1}>Go to Step 1</button>
+            )}
+          </Controls>
+        </div>
+      </Step>
+      <Step name="error">
+        <div>
+          I am step 4
+          <br />
+          <Controls>
+            {({ destinations: { step2 } }) => (
+              <button onClick={step2}>Go to Step 2</button>
+            )}
+          </Controls>
+        </div>
+      </Step>
+    </Wizard>
+  );
+};
+```
+
 # Development
 
 Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
