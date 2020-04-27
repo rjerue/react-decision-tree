@@ -1,6 +1,6 @@
 # react-decision-tree-flow
 
-This is a library to create declarative wizards in React.js
+This is a library to create declarative wizards in react.js and react-native.
 
 A basic example of a full Wizard looks like this:
 
