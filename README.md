@@ -175,7 +175,7 @@ The hook and render props deliver 3 things in the return, the current `step` tha
 
 The only rule surrounding the `Controls` component and it's hook is that it has the `Wizard` as a descendant. It may go under a `Step` or just the `Wizard` in general.
 
-## `destinations` aka Moving the Wizard.
+### `destinations` aka Moving the Wizard.
 
 Inside of the destinations object, you will find keys that correspond to where the wizard can go. The values of those keys are functions that change the state of the wizard. Consider the following example:
 
