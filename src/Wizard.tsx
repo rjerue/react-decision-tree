@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, ReactElement } from 'react';
-import { Tree, ControlType, WizardContext } from 'Shared';
+import { Tree, ControlType, WizardContext } from './Shared';
 
 export interface WizardProps<T extends Tree> {
   tree: T;

@@ -1,5 +1,4 @@
 import React from 'react';
-import { WizardContext as WizardContext$1 } from 'Shared';
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -18,6 +17,15 @@ function _extends() {
 
   return _extends.apply(this, arguments);
 }
+
+var WizardContext = /*#__PURE__*/React.createContext({
+  tree: {},
+  step: '',
+  setStep: function setStep() {},
+  getControls: function getControls() {
+    return {};
+  }
+});
 
 function Wizard(_ref) {
   var children = _ref.children,
@@ -40,7 +48,7 @@ function Wizard(_ref) {
     }, {});
   };
 
-  return React.createElement(WizardContext$1.Provider, {
+  return React.createElement(WizardContext.Provider, {
     value: {
       tree: tree,
       step: step,
@@ -54,14 +62,14 @@ function Step(_ref) {
   var children = _ref.children,
       name = _ref.name;
 
-  var _React$useContext = React.useContext(WizardContext$1),
+  var _React$useContext = React.useContext(WizardContext),
       step = _React$useContext.step;
 
   return React.createElement(React.Fragment, null, step === name && children);
 }
 
 function useControls() {
-  var _React$useContext = React.useContext(WizardContext$1),
+  var _React$useContext = React.useContext(WizardContext),
       getControls = _React$useContext.getControls,
       step = _React$useContext.step,
       tree = _React$useContext.tree;
@@ -77,15 +85,6 @@ function Controls(_ref) {
   var getControls = useControls();
   return React.createElement(React.Fragment, null, children(_extends({}, getControls)));
 }
-
-var WizardContext = /*#__PURE__*/React.createContext({
-  tree: {},
-  step: '',
-  setStep: function setStep() {},
-  getControls: function getControls() {
-    return {};
-  }
-});
 
 export { Controls, Step, Wizard, WizardContext, useControls };
 //# sourceMappingURL=react-decision-tree-flow.esm.js.map

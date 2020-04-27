@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Tree } from 'Shared';
+import { Tree } from './Shared';
 export interface ControlHook<T extends Tree> {
     step: keyof T;
     tree: T;

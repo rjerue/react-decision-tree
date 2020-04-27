@@ -17,14 +17,14 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook -o docs"
   },
   "peerDependencies": {
     "react": ">=16"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint && yarn build && git add dist"
+      "pre-commit": "tsdx lint && yarn build && git add dist && yarn build-storybook && git add docs"
     }
   },
   "prettier": {

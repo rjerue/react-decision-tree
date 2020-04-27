@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { WizardContext, Tree } from 'Shared';
+import { WizardContext, Tree } from './Shared';
 
 export interface StepProps<T> {
   name: keyof T;

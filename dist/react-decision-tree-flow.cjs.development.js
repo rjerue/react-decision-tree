@@ -5,7 +5,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var React = _interopDefault(require('react'));
-var Shared = require('Shared');
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -24,6 +23,15 @@ function _extends() {
 
   return _extends.apply(this, arguments);
 }
+
+var WizardContext = /*#__PURE__*/React.createContext({
+  tree: {},
+  step: '',
+  setStep: function setStep() {},
+  getControls: function getControls() {
+    return {};
+  }
+});
 
 function Wizard(_ref) {
   var children = _ref.children,
@@ -46,7 +54,7 @@ function Wizard(_ref) {
     }, {});
   };
 
-  return React.createElement(Shared.WizardContext.Provider, {
+  return React.createElement(WizardContext.Provider, {
     value: {
       tree: tree,
       step: step,
@@ -60,14 +68,14 @@ function Step(_ref) {
   var children = _ref.children,
       name = _ref.name;
 
-  var _React$useContext = React.useContext(Shared.WizardContext),
+  var _React$useContext = React.useContext(WizardContext),
       step = _React$useContext.step;
 
   return React.createElement(React.Fragment, null, step === name && children);
 }
 
 function useControls() {
-  var _React$useContext = React.useContext(Shared.WizardContext),
+  var _React$useContext = React.useContext(WizardContext),
       getControls = _React$useContext.getControls,
       step = _React$useContext.step,
       tree = _React$useContext.tree;
@@ -83,15 +91,6 @@ function Controls(_ref) {
   var getControls = useControls();
   return React.createElement(React.Fragment, null, children(_extends({}, getControls)));
 }
-
-var WizardContext = /*#__PURE__*/React.createContext({
-  tree: {},
-  step: '',
-  setStep: function setStep() {},
-  getControls: function getControls() {
-    return {};
-  }
-});
 
 exports.Controls = Controls;
 exports.Step = Step;

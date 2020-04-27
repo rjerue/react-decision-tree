@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { Tree } from 'Shared';
+import { Tree } from './Shared';
 export interface StepProps<T> {
     name: keyof T;
 }

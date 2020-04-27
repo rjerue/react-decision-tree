@@ -1,5 +1,5 @@
 import { PropsWithChildren, ReactElement } from 'react';
-import { Tree } from 'Shared';
+import { Tree } from './Shared';
 export interface WizardProps<T extends Tree> {
     tree: T;
     first: keyof T;

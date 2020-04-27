@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wizard, Step, Controls, useControls } from '../dist/';
+import { Wizard, Step, Controls, useControls } from '../src/';
 
 export default {
   title: 'Examples',
@@ -78,24 +78,26 @@ export const ComplexTree = () => {
     step2: ['step3', 'error'],
     step3: ['step1'],
     error: ['step2'],
-  };
+  } as const;
   return (
     <div>
       <Wizard first="step1" tree={tree}>
         {Object.keys(tree).map(key => (
           <Step name={key} key={key}>
             <Controls>
-              {({ tree, step, destinations }) => (
-                <div>
-                  I am {step}
-                  <br />
-                  {Object.entries(destinations).map(([key, value]) => (
-                    <button key={key} onClick={value}>
-                      GO TO {key}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {({ tree, step, destinations }) => {
+                return (
+                  <div>
+                    I am {step}
+                    <br />
+                    {Object.entries(destinations).map(([key, value]) => (
+                      <button key={key} onClick={value}>
+                        GO TO {key}
+                      </button>
+                    ))}
+                  </div>
+                );
+              }}
             </Controls>
           </Step>
         ))}
@@ -111,7 +113,7 @@ export const HooksTree = () => {
     step2: ['step3', 'error'],
     step3: ['step1'],
     error: ['step2'],
-  };
+  } as const;
 
   const StepComp = ({ value }) => {
     const { step, tree, destinations } = useControls<typeof inTree>();

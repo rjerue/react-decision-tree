@@ -2,16 +2,16 @@
 
 This is a library to create declarative wizards in React.js
 
-A basic example of a Wizard looks like this:
+A basic example of a full Wizard looks like this:
 
-```tsx
+```jsx
 export const BasicTree = () => {
   const tree = {
     step1: ['step2'],
     step2: ['step3', 'error'],
     step3: ['step1'],
     error: ['step2'],
-  } as const;
+  };
 
   return (
     <Wizard tree={tree} first="step1">
@@ -67,196 +67,203 @@ export const BasicTree = () => {
 };
 ```
 
-# Development
+## Wizard
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
-
-> This TSDX setup is meant for developing React components (not apps!) that can be published to NPM. If you’re looking to build an app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
-
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
-
-## Commands
-
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
-
-The recommended workflow is to run TSDX in one terminal:
-
-```
-npm start # or yarn start
-```
-
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
-
-Then run either example playground or storybook:
-
-### Storybook
-
-Run inside another terminal:
-
-```
-yarn storybook
-```
-
-This loads the stories from `./stories`.
-
-> NOTE: Stories should reference the components as if using the library, similar to the example playground. This means importing from the root project directory. This has been aliased in the tsconfig and the storybook webpack config as a helper.
-
-### Example
-
-Then run the example inside another:
-
-```
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
-```
-
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, [we use Parcel's aliasing](https://github.com/palmerhq/tsdx/pull/88/files).
-
-To do a one-off build, use `npm run build` or `yarn build`.
-
-To run tests, use `npm test` or `yarn test`.
-
-## Configuration
-
-Code quality is [set up for you](https://github.com/palmerhq/tsdx/pull/45/files) with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
-
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`. This runs the test watcher (Jest) in an interactive mode. By default, runs tests related to files changed since the last commit.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
-```
-
-#### React Testing Library
-
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
-
-### Rollup
-
-TSDX uses [Rollup v1.x](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### Travis
-
-_to be completed_
-
-### Circle
-
-_to be completed_
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
-```
-
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
-
-## Module Formats
-
-CJS, ESModules, and UMD module formats are supported.
-
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
-
-## Using the Playground
-
-```
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
-```
-
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**!
-
-## Deploying the Playground
-
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
-
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
-```
-
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
-
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
-```
-
-## Named Exports
-
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
-
-## Including Styles
-
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using https://github.com/sindresorhus/np.
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+The wizard component takes in two props as inputs, a tree and the first step of the wizard. The first step is the initial state of the wizard.
 
 ```jsx
-const StepWithImg = () => {
+const tree = {
+  step1: ['step2'],
+  step2: ['step2', 'error'],
+  step3: [],
+  error: [],
+};
+
+const MyWizard = ({ children }) => {
   return (
-    <Step name="myStep">
-      <img src="https://avatars2.githubusercontent.com/u/4666313?s=80&v=4">
-    </Step>
+    <Wizard tree={tree} first="step1">
+      {children}
+    </Wizard>
   );
-}
+};
+```
+
+### Defining a tree
+
+Trees are defined using JavaScript objects such as the following
+
+```js
+const tree = {
+  step1: ['step2'],
+  step2: ['step3', 'error'],
+  step3: [],
+  error: [],
+};
+```
+
+Each step is a key. The value for each of those keys are the possible destinations for the objects in the tree. In the above example, `step1` for example can go only to `step2`, and `step2` may to to `step3` or the `error` step. An empty array such as that in `step3` and `error` signifies that the Wizard has no possible destinations.
+
+If using TypeScript, I highly suggest using [const assertions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-4.html#const-assertions) to allow for hinting of destinations. This may be done by adding `as const` to your tree object as such.
+
+```ts
+const tree = {
+  step1: ['step2'],
+  step2: [],
+} as const;
+```
+
+## Steps
+
+Inside of a Wizard, one should create `Steps`. Steps do not have to be displayed linearly. Only one step may be shown at one. If multiple steps in a Wizard have the same name, they may both be shown.
+
+Typically, steps are used like below:
+
+```jsx
+const tree = {
+  step1: ['step2'],
+  step2: [],
+};
+
+const MyWizard = () => {
+  return (
+    <Wizard tree={tree} first="step1">
+      <Step name="step1">
+        <span> Hello From Step 1</span>
+      </Step>
+      <Step name="step2">
+        <span> Hello From Step 2</span>
+      </Step>
+    </Wizard>
+  );
+};
+```
+
+## Controls
+
+Controls are what actually drive the Wizard. They may be surfaced via a render prop or hook.
+
+```jsx
+// Render Prop
+<Wizard>
+  ...
+  <Controls>
+    {({ step, tree, destinations: { step2 } }) => (
+      <button onClick={step2}>Go to Step 2</button>
+    )}
+  </Controls>
+  ...
+</Wizard>;
+// Hook
+
+const { step, tree, destinations } = useControls();
+```
+
+When using the hook in typescript, you may pass a `typeof tree` in as a generic for `useControl()` to allow for hinting under destinations as such.
+
+```tsx
+const myTree = {
+  step1: ['step2'],
+  step2: [],
+} as const;
+
+...
+const { step, tree, destinations } = useControls<typeof myTree>();
+// destinations.step1 and destinations.step2 will be hinted!
+```
+
+The hook and render props deliver 3 things in the return, the current `step` that the wizard is at, the `tree` that the wizard is using, and finally the `destinations` for the wizard.
+
+The only rule surrounding the `Controls` component and it's hook is that it has the `Wizard` as a descendant. It may go under a `Step` or just the `Wizard` in general.
+
+## `destinations` aka Moving the Wizard.
+
+Inside of the destinations object, you will find keys that correspond to where the wizard can go. The values of those keys are functions that change the state of the wizard. Consider the following example:
+
+```jsx
+const tree = {
+  step1: ['step2', 'step3'],
+  step2: ['step3'],
+  step3: [],
+};
+
+const MyWizard = () => {
+  return (
+    <Wizard tree={tree} first="step1">
+      <Step name="step1">
+        <span> Hello From Step 1</span>
+      </Step>
+      <Step name="step2">
+        <span> Hello From Step 2</span>
+      </Step>
+      <Step name="step3">
+        <span> Hello From Step 3. The end!</span>
+      </Step>
+      <Controls>
+        {({ step, destinations }) => {
+          // At step === step1, destinations will contain { step2: () => void, step3: () => void }
+          // At step === step2, destination will only contain { step3: () => void }
+          // at step === step3, destination will be an empty object.
+          Object.entries(destinations).map(([stepName, goToStep]) => {
+            return (
+              <button key="stepName" onClick={goToStep}>
+                Go to {stepName}
+              </button>
+            );
+          });
+        }}
+      </Controls>
+    </Wizard>
+  );
+};
+```
+
+## Recipes
+
+### Effects/Middleware
+
+One may want to put an effect onto the state of a wizard changing. Previously, this library had a middleware function. That has been removed in favor of using `useEffect`. Consider the following example:
+
+```tsx
+const tree = {
+  step1: ['step2', 'step3'],
+  step2: ['step3'],
+  step3: [],
+} as const;
+
+const WizardInternals = () => {
+  const { step, destinations } = useControls<typeof tree>();
+  React.useEffect( () => {
+    console.log(`I can do things with ${step}`)
+  }, [step])
+  return (
+    <>
+      <Step name="step1">
+        <span> Hello From Step 1</span>
+      </Step>
+      <Step name="step2">
+        <span> Hello From Step 2</span>
+      </Step>
+      <Step name="step3">
+        <span> Hello From Step 3. The end!</span>
+      </Step>
+      {
+        Object.entries(destinations).map(([stepName, goToStep]) => {
+          return (
+            <button key="stepName" onClick={goToStep}>
+              Go to {stepName}
+            </button>
+          );
+        });
+      }
+    </>
+  );
+};
+
+const MyWizard = () => {
+  return (
+    <Wizard tree={tree} first="step1">
+      <WizardInternals />
+    </Wizard>
+  );
+};
 ```
