@@ -11,6 +11,20 @@ export function Wizard<T extends Tree>({
   tree,
   first,
 }: PropsWithChildren<WizardProps<T>>): ReactElement {
+  // Check tree for bad values
+  React.useEffect(() => {
+    const allSteps = Object.keys(tree);
+    Object.entries(tree).forEach(([key, dests]) => {
+      dests.forEach(d => {
+        if (!allSteps.includes(d)) {
+          console.warn(
+            `Tree definition includes path to ${d} from ${key}. However ${d} is not in tree as a key.`
+          );
+        }
+      });
+    });
+  }, [tree]);
+
   const [step, setStep] = React.useState<keyof T>(first);
 
   const getControls = () => {

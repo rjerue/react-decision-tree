@@ -37,6 +37,19 @@ function Wizard(_ref) {
   var children = _ref.children,
       tree = _ref.tree,
       first = _ref.first;
+  // Check tree for bad values
+  React.useEffect(function () {
+    var allSteps = Object.keys(tree);
+    Object.entries(tree).forEach(function (_ref2) {
+      var key = _ref2[0],
+          dests = _ref2[1];
+      dests.forEach(function (d) {
+        if (!allSteps.includes(d)) {
+          console.warn("Tree definition includes path to " + d + " from " + key + ". However " + d + " is not in tree as a key.");
+        }
+      });
+    });
+  }, [tree]);
 
   var _React$useState = React.useState(first),
       step = _React$useState[0],
@@ -64,16 +77,6 @@ function Wizard(_ref) {
   }, children);
 }
 
-function Step(_ref) {
-  var children = _ref.children,
-      name = _ref.name;
-
-  var _React$useContext = React.useContext(WizardContext),
-      step = _React$useContext.step;
-
-  return React.createElement(React.Fragment, null, step === name && children);
-}
-
 function useControls() {
   var _React$useContext = React.useContext(WizardContext),
       getControls = _React$useContext.getControls,
@@ -90,6 +93,23 @@ function Controls(_ref) {
   var children = _ref.children;
   var getControls = useControls();
   return React.createElement(React.Fragment, null, children(_extends({}, getControls)));
+}
+
+function Step(_ref) {
+  var children = _ref.children,
+      name = _ref.name;
+
+  var _useControls = useControls(),
+      step = _useControls.step,
+      tree = _useControls.tree; // Check if name is bad value
+
+
+  React.useEffect(function () {
+    if (!Object.keys(tree).includes(name)) {
+      console.warn("Step component with name " + name + " is not found in step tree!");
+    }
+  }, [name, tree]);
+  return React.createElement(React.Fragment, null, step === name && children);
 }
 
 exports.Controls = Controls;

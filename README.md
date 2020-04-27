@@ -153,8 +153,8 @@ Controls are what actually drive the Wizard. They may be surfaced via a render p
   </Controls>
   ...
 </Wizard>;
-// Hook
 
+// Hook
 const { step, tree, destinations } = useControls();
 ```
 
