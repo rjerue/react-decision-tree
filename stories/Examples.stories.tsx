@@ -69,16 +69,11 @@ export const BasicTree = () => {
 export const ComplexTree = () => {
   const tree = {
     step1: ['step2', 'sideshow'],
-    sideshow: [
-      'step2',
-      { previous: 'step2', next: 'step3' },
-      { rawr: 'error' },
-      'step3',
-    ],
+    sideshow: ['step2', 'step3'],
     step2: ['step3', 'error'],
     step3: ['step1'],
     error: ['step2'],
-  } as const;
+  };
   return (
     <div>
       <Wizard first="step1" tree={tree}>
