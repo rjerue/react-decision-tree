@@ -6,12 +6,22 @@ export interface WizardProps<T extends Tree> {
   first: keyof T;
 }
 
+/**
+ * Declarative Wizard component for React.
+ * @param props Takes in a tree, the first step of the wizard, and children.
+ */
 export function Wizard<T extends Tree>({
   children,
   tree,
   first,
 }: PropsWithChildren<WizardProps<T>>): ReactElement {
   // Check tree for bad values
+  React.useEffect(() => {
+    const allSteps = Object.keys(tree);
+    if (!allSteps.includes(first as string)) {
+      console.warn(`First step ${first} is now found in tree as key`);
+    }
+  }, [first, tree]);
   React.useEffect(() => {
     const allSteps = Object.keys(tree);
     Object.entries(tree).forEach(([key, dests]) => {
