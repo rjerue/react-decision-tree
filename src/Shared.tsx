@@ -6,11 +6,13 @@ export interface Tree {
 
 export type ControlType<T extends Tree> = Record<keyof T, () => void>;
 
-export interface WizardContextProps<T extends Tree> {
+export interface WizardContextProps<T extends Tree, D extends any = any> {
   tree: T;
   step: string;
   setStep: React.Dispatch<React.SetStateAction<keyof T>>;
   getControls: () => ControlType<T>;
+  data: D | null;
+  setData: React.Dispatch<React.SetStateAction<D>>;
 }
 
 export const WizardContext = React.createContext<WizardContextProps<any>>({
@@ -18,4 +20,6 @@ export const WizardContext = React.createContext<WizardContextProps<any>>({
   step: '',
   setStep: () => {},
   getControls: () => ({}),
+  data: {},
+  setData: () => {},
 });

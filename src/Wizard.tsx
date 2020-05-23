@@ -1,20 +1,22 @@
 import React, { PropsWithChildren, ReactElement } from 'react';
 import { Tree, ControlType, WizardContext } from './Shared';
 
-export interface WizardProps<T extends Tree> {
+export interface WizardProps<T extends Tree, D extends any = any> {
   tree: T;
   first: keyof T;
+  initialData?: D | null;
 }
 
 /**
  * Declarative Wizard component for React.
  * @param props Takes in a tree, the first step of the wizard, and children.
  */
-export function Wizard<T extends Tree>({
+export function Wizard<T extends Tree, D = any>({
   children,
   tree,
   first,
-}: PropsWithChildren<WizardProps<T>>): ReactElement {
+  initialData = null,
+}: PropsWithChildren<WizardProps<T, D>>): ReactElement {
   // Check tree for bad values
   React.useEffect(() => {
     const allSteps = Object.keys(tree);
@@ -36,13 +38,16 @@ export function Wizard<T extends Tree>({
   }, [tree]);
 
   const [step, setStep] = React.useState<keyof T>(first);
-
+  const [data, setData] = React.useState<D | null>(initialData);
   const getControls = () => {
     const possibleSteps = tree[step];
     return possibleSteps.reduce<ControlType<T>>((accum, step) => {
       const next = {
-        [step]: () => {
+        [step]: (data?: D) => {
           setStep(step);
+          if (data) {
+            setData(data);
+          }
         },
       };
       return {
@@ -51,7 +56,6 @@ export function Wizard<T extends Tree>({
       };
     }, {} as ControlType<T>);
   };
-
   return (
     <WizardContext.Provider
       value={{
@@ -59,6 +63,8 @@ export function Wizard<T extends Tree>({
         step: step as string,
         setStep: setStep as React.Dispatch<React.SetStateAction<any>>,
         getControls: getControls as () => Record<string, any>,
+        data,
+        setData,
       }}
     >
       {children}

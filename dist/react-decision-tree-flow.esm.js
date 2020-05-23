@@ -24,7 +24,9 @@ var WizardContext = /*#__PURE__*/React.createContext({
   setStep: function setStep() {},
   getControls: function getControls() {
     return {};
-  }
+  },
+  data: {},
+  setData: function setData() {}
 });
 
 /**
@@ -35,7 +37,9 @@ var WizardContext = /*#__PURE__*/React.createContext({
 function Wizard(_ref) {
   var children = _ref.children,
       tree = _ref.tree,
-      first = _ref.first;
+      first = _ref.first,
+      _ref$initialData = _ref.initialData,
+      initialData = _ref$initialData === void 0 ? null : _ref$initialData;
   // Check tree for bad values
   React.useEffect(function () {
     var allSteps = Object.keys(tree);
@@ -61,13 +65,21 @@ function Wizard(_ref) {
       step = _React$useState[0],
       setStep = _React$useState[1];
 
+  var _React$useState2 = React.useState(initialData),
+      data = _React$useState2[0],
+      setData = _React$useState2[1];
+
   var getControls = function getControls() {
     var possibleSteps = tree[step];
     return possibleSteps.reduce(function (accum, step) {
       var _next;
 
-      var next = (_next = {}, _next[step] = function () {
+      var next = (_next = {}, _next[step] = function (data) {
         setStep(step);
+
+        if (data) {
+          setData(data);
+        }
       }, _next);
       return _extends({}, accum, {}, next);
     }, {});
@@ -78,14 +90,16 @@ function Wizard(_ref) {
       tree: tree,
       step: step,
       setStep: setStep,
-      getControls: getControls
+      getControls: getControls,
+      data: data,
+      setData: setData
     }
   }, children);
 }
 
 /**
- * A react hook that exposes the current step, possible destinations, and the tree being used.
- * Destinations is an object where the keys are possible destinations and the values are
+ * A react hook that exposes the current step, possible destinations, passed data, and the tree
+ * being used. Destinations is an object where the keys are possible destinations and the values are
  * functions to move the wizard there.
  */
 
@@ -93,19 +107,21 @@ function useControls() {
   var _React$useContext = React.useContext(WizardContext),
       getControls = _React$useContext.getControls,
       step = _React$useContext.step,
-      tree = _React$useContext.tree;
+      tree = _React$useContext.tree,
+      data = _React$useContext.data;
 
   return {
     step: step,
     tree: tree,
-    destinations: getControls()
+    destinations: getControls(),
+    data: data || undefined
   };
 }
 /**
  * Controls React Component
  * @param ChildrenRenderProp Children is a function that exposes the current step, possible destinations,
- * and the tree being used. Destinations is an object where the keys are possible destinations and the
- * values are functions to move the wizard there.
+ * passed data, and the tree being used. Destinations is an object where the keys are possible destinations
+ * and the values are functions to move the wizard there.
  */
 
 function Controls(_ref) {

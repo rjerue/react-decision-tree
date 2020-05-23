@@ -134,3 +134,76 @@ export const HooksTree = () => {
     </Wizard>
   );
 };
+
+export const PassedDataTree = () => {
+  const tree = {
+    step1: ['step2'],
+    step2: ['step3'],
+    step3: ['step1'],
+  } as const;
+
+  return (
+    <Wizard tree={tree} first="step1" initialData={1}>
+      <Step name="step1">
+        <div>
+          I am step 1
+          <br />
+          <Controls>
+            {({ destinations: { step2 }, data }) => (
+              <>
+                <div>You have been to {data} steps.</div>
+                <button
+                  onClick={() => {
+                    step2((data as number) + 1);
+                  }}
+                >
+                  Go to Step 2
+                </button>
+              </>
+            )}
+          </Controls>
+        </div>
+      </Step>
+      <Step name="step2">
+        <div>
+          I am step 2
+          <br />
+          <Controls>
+            {({ destinations: { step3 }, data }) => (
+              <>
+                <div>You have been to {data} steps.</div>
+                <button
+                  onClick={() => {
+                    step3((data as number) + 1);
+                  }}
+                >
+                  Go to Step 2
+                </button>
+              </>
+            )}
+          </Controls>
+        </div>
+      </Step>
+      <Step name="step3">
+        <div>
+          I am step 3
+          <br />
+          <Controls>
+            {({ destinations: { step1 }, data }) => (
+              <>
+                <div>You have been to {data} steps.</div>
+                <button
+                  onClick={() => {
+                    step1((data as number) + 1);
+                  }}
+                >
+                  Go to Step 2
+                </button>
+              </>
+            )}
+          </Controls>
+        </div>
+      </Step>
+    </Wizard>
+  );
+};
